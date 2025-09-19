@@ -17,7 +17,7 @@ colData$condition <- relevel(colData$condition, toString(colData$condition[1]))
 sample_name <- colData$sample
 
 # countData for matrix input: a matrix of non-negative integers
-df <- read.csv(counts_file)
+df <- read.csv(counts_file, row.names = 1, header = T)
 
 # housekeeping and making sure (later) countData has the matching column names 
 #as colData
@@ -60,13 +60,13 @@ res_data$baseMeanA = 1
 res_data$baseMeanB = 1
 
 # Get the normalized counts
-normed = counts(dse, normalized=TRUE)
+norm = counts(dse, normalized=TRUE)
 
 # Round normalized counts to a single digit.
-normed = round(normed, 1)
+norm = round(norm, 1)
 
 # Merge the two datasets by row names
-final <- merge(res_data, normed, by=0)
+final <- merge(res_data, norm, by=0)
 # Sort again for output.
 final = final[with(final, order(PValue, -foldChange)), ]
 
@@ -109,3 +109,4 @@ final = final[, new_col]
 write.csv(final, file=output_file, quote = F, row.names = F)
 
 print(paste("Output file:", output_file))
+
